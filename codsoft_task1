@@ -1,0 +1,79 @@
+import json
+
+# Initialize an empty task list
+tasks = []
+
+# Function to save tasks to a JSON file
+def save_tasks():
+    with open('tasks.json', 'w') as f:
+        json.dump(tasks, f)
+
+# Function to load tasks from a JSON file
+def load_tasks():
+    global tasks
+    try:
+        with open('tasks.json', 'r') as f:
+            tasks = json.load(f)
+    except FileNotFoundError:
+        tasks = []
+
+# Function to add a new task
+def add_task(title, description=''):
+    tasks.append({'title': title, 'description': description, 'completed': False})
+
+# Function to remove a task by index
+def remove_task(index):
+    if 0 <= index < len(tasks):
+        del tasks[index]
+    else:
+        print("Invalid task index!")
+
+# Function to mark a task as complete by index
+def complete_task(index):
+    if 0 <= index < len(tasks):
+        tasks[index]['completed'] = True
+    else:
+        print("Invalid task index!")
+
+# Function to list all tasks
+def list_tasks():
+    for i, task in enumerate(tasks):
+        status = 'X' if task['completed'] else ' '
+        print(f"{i+1}. [{status}] {task['title']} - {task['description']}")
+
+# Main function to run the application
+def main():
+    load_tasks()
+
+    while True:
+        print("\nCOMMANDS:")
+        print("1. Add task")
+        print("2. Remove task")
+        print("3. Complete task")
+        print("4. List tasks")
+        print("5. Save and Quit")
+
+        choice = input("Enter your choice (1-5): ")
+
+        if choice == '1':
+            title = input("Enter task title: ")
+            description = input("Enter task description (optional): ")
+            add_task(title, description)
+        elif choice == '2':
+            index = int(input("Enter task index to remove: ")) - 1
+            remove_task(index)
+        elif choice == '3':
+            index = int(input("Enter task index to mark as complete: ")) - 1
+            complete_task(index)
+        elif choice == '4':
+            list_tasks()
+        elif choice == '5':
+            save_tasks()
+            break
+        else:
+            print("Invalid choice. Please enter a number from 1 to 5.")
+
+    print("Thank you for using the To-Do List application!")
+
+if __name__ == "__main__":
+    main()
